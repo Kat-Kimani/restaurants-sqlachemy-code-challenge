@@ -230,14 +230,28 @@ session = Session()
 # Review for {insert restaurant name} by {insert customer's full name}: {insert review star_rating} stars.
 # ```
 
-# Fetch a customer from the database
-customer_id = 4
-customer = session.get(Customer, customer_id)
+# # Fetch a customer from the database
+# customer_id = 4
+# customer = session.get(Customer, customer_id)
 
-# Print all the customer's reviews
-reviews = customer.get_reviews()
+# # Print all the customer's reviews
+# reviews = customer.get_reviews()
+# for review in reviews:
+#     print(review.full_review())
+
+####################################################################
+# Fetch a restaurant from the database
+restaurant_id = 2
+# restaurant = session.query(Restaurant).get(restaurant_id)
+restaurant = session.get(Restaurant, restaurant_id)
+
+# Get all reviews for the restaurant
+reviews = restaurant.all_reviews()
+
+# Print the reviews
+print("Restaurant Reviews:")
 for review in reviews:
-    print(review.full_review())
+    print(review)
 
 # Close the session
 session.close()

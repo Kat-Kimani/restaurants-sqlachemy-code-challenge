@@ -75,16 +75,17 @@ class Restaurant(Base):
     def __repr__(self):
         return f"Restaurant(id={self.id}, name={self.name}, price={self.price})"
     
-    @classmethod
-    def fanciest(cls):
-        return cls.query.order_by(cls.price.desc()).first()
+    # @classmethod
+    # def fanciest(cls):
+    #     return session.query(cls).order_by(cls.price.desc()).first()
 
     def all_reviews(self):
-        reviews = self.reviews
-        review_strings = [
-            f"Review for {self.name} by {review.customer.full_name()}: {review.star_rating} stars."
-            for review in reviews
-        ]
+        review_strings = []
+        for review in self.reviews:
+            customer_first_name = review.customer.first_name
+            customer_last_name = review.customer.last_name
+            review_string = f"Review for {self.name} by {customer_first_name} {customer_last_name}: {review.star_rating} stars."
+            review_strings.append(review_string)
         return review_strings
 
 
