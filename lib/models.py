@@ -46,6 +46,10 @@ class Review(Base):
     def get_reviews(self):
         return self.reviews
 
+    def full_review(self):
+        customer_full_name = f"{self.customer.first_name} {self.customer.last_name}"
+        return f"Review for {self.restaurant.name} by {customer_full_name}: {self.star_rating} stars."
+
 
 #############################################
 
@@ -70,6 +74,18 @@ class Restaurant(Base):
 
     def __repr__(self):
         return f"Restaurant(id={self.id}, name={self.name}, price={self.price})"
+    
+    @classmethod
+    def fanciest(cls):
+        return cls.query.order_by(cls.price.desc()).first()
+
+    def all_reviews(self):
+        reviews = self.reviews
+        review_strings = [
+            f"Review for {self.name} by {review.customer.full_name()}: {review.star_rating} stars."
+            for review in reviews
+        ]
+        return review_strings
 
 
 ######################################
@@ -116,4 +132,14 @@ class Customer(Base):
 
         # Add the review to the session and commit the changes
         session.add(review)
+        session.commit()
+
+    def delete_reviews(self, session, restaurant):
+        reviews_to_delete = [
+            review
+            for review in self.customer_reviews
+            if review.restaurant == restaurant
+        ]
+        for review in reviews_to_delete:
+            session.delete(review)
         session.commit()
